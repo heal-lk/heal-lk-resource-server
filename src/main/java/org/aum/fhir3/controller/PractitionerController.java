@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-import org.aum.fhir3.repository.PractitionerRepository;
-import org.aum.fhir3.model.Practitioner;
+import org.aum.fhir3.repository.individual.PractitionerRepository;
+import org.aum.fhir3.model.individual.Practitioner;
 import org.aum.system.Logger;
 import org.aum.fhir3.outcome.OperationOutcome;
 
@@ -26,7 +26,7 @@ public class PractitionerController {
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Practitioner practitioner){
         try {
-            Practitioner tmp = practitionerRepository.findOneRegisteredPractitionerBy_nic(practitioner.get_nic());
+            Practitioner tmp = practitionerRepository.findOneRegisteredPractitionerByNic(practitioner.getNic());
             if(tmp == null) {
                 practitioner = practitionerRepository.save(practitioner);
                 return new ResponseEntity<>(practitioner, HttpStatus.OK);
@@ -45,7 +45,7 @@ public class PractitionerController {
     @RequestMapping(value = "/read/{nic}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> read(@PathVariable String nic){
-        Practitioner tmp = practitionerRepository.findOneRegisteredPractitionerBy_nic(nic);
+        Practitioner tmp = practitionerRepository.findOneRegisteredPractitionerByNic(nic);
         if(tmp != null){
             return new ResponseEntity<>(tmp, HttpStatus.OK);
         }

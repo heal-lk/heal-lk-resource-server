@@ -9,14 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import org.hibernate.exception.ConstraintViolationException;
 
 import org.aum.system.Logger;
-import org.aum.fhir3.model.Patient;
-import org.aum.fhir3.model.Identifier;
-import org.aum.fhir3.model.Test;
-import org.aum.fhir3.repository.PatientRepository;
-import org.aum.fhir3.repository.TestRepository;
+import org.aum.fhir3.model.individual.Patient;
+import org.aum.fhir3.model.general.Identifier;
+import org.aum.fhir3.repository.individual.PatientRepository;
+import org.aum.fhir3.repository.general.TestRepository;
 import org.aum.fhir3.outcome.OperationOutcome;
 
 
@@ -32,7 +30,7 @@ public class PatientController {
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Patient patient){
         try {
-            Patient tmp = patientRepository.findOneRegisteredPatientBy_identifier(patient.get_identifier());
+            Patient tmp = patientRepository.findOneRegisteredPatientByNic(patient.getNic());
             if(tmp == null) {
                 patient = patientRepository.save(patient);
                 return new ResponseEntity<>(patient, HttpStatus.OK);
@@ -47,15 +45,13 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(value = "/read", method = RequestMethod.GET, produces = "application/json", consumes = "application/json")
+    @RequestMapping(value = "/read/{nic}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> read(@RequestBody Identifier identifier){
-        //TODO
-        Patient tmp = patientRepository.findOneRegisteredPatientBy_identifier(identifier);
+    public ResponseEntity<?> read(String nic){
+        Patient tmp = patientRepository.findOneRegisteredPatientByNic(nic);
         if(tmp != null){
             return new ResponseEntity<>(tmp, HttpStatus.OK);
         }
-        //TODO
         return new ResponseEntity<>(OperationOutcome.RecordNotFound(), HttpStatus.OK);
     }
 
@@ -70,8 +66,10 @@ public class PatientController {
     }
 
     @RequestMapping(value="/sample/{parameter}", method = RequestMethod.GET)
-    public String sample(@PathVariable String parameter){
-    	return "This is the parameter " + parameter;
+    public ResponseEntity<?> sample(@PathVariable String parameter){
+        Patient patient = new Patient();
+
+        return new ResponseEntity<>(patient, HttpStatus.OK);
     }
     
 }

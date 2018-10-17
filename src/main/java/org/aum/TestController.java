@@ -1,6 +1,6 @@
 package org.aum;
 
-import org.aum.fhir3.repository.ContactPointRepository;
+import org.aum.fhir3.repository.general.ContactPointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import org.aum.fhir3.model.Person;
-import org.aum.fhir3.model.ContactPoint;
-import org.aum.fhir3.repository.PersonRepository;
+import org.aum.fhir3.model.individual.Person;
+import org.aum.fhir3.model.general.ContactPoint;
+import org.aum.fhir3.repository.individual.PersonRepository;
 import java.util.List;
 
 @Controller    // This means that this class is a Controller

@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-import org.aum.fhir3.repository.OrganizationRepository;
-import org.aum.fhir3.model.Organization;
+import org.aum.fhir3.repository.entities.OrganizationRepository;
+import org.aum.fhir3.model.entities.Organization;
 import org.aum.system.Logger;
 import org.aum.fhir3.outcome.OperationOutcome;
 
@@ -26,7 +26,7 @@ public class OrganizationController {
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Organization organization){
         try {
-            Organization tmp = organizationRepository.findOneRegisteredOrganizationBy_name(organization.get_name());
+            Organization tmp = organizationRepository.findOneRegisteredOrganizationByName(organization.getName());
             if(tmp == null) {
                 organization = organizationRepository.save(organization);
                 return new ResponseEntity<>(organization, HttpStatus.OK);
@@ -46,7 +46,7 @@ public class OrganizationController {
     @RequestMapping(value = "/read/{name}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> read(@PathVariable String name){
-        Organization tmp = organizationRepository.findOneRegisteredOrganizationBy_name(name);
+        Organization tmp = organizationRepository.findOneRegisteredOrganizationByName(name);
         if(tmp != null){
             return new ResponseEntity<>(tmp, HttpStatus.OK);
         }

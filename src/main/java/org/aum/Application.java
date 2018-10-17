@@ -7,12 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import java.util.Calendar;
 
-import org.aum.fhir3.repository.ContactPointRepository;
-import org.aum.fhir3.repository.PersonRepository;
+import org.aum.fhir3.repository.general.ContactPointRepository;
+import org.aum.fhir3.repository.individual.PersonRepository;
+import org.aum.fhir3.model.general.Coding;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner{
@@ -37,8 +37,6 @@ public class Application implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-        //contactPointRepository.deleteAllInBatch();
-        //personRepository.deleteAllInBatch();
     }
 
 }
