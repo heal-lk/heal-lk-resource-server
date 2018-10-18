@@ -1,6 +1,10 @@
 package org.aum.fhir3.controller;
 
 
+import org.aum.fhir3.model.base.general.Address;
+import org.aum.fhir3.model.base.general.Attachment;
+import org.aum.fhir3.model.base.general.ContactPoint;
+import org.aum.fhir3.model.base.general.Period;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,10 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-import org.aum.fhir3.repository.individual.PractitionerRepository;
-import org.aum.fhir3.model.individual.Practitioner;
+import org.aum.fhir3.repository.base.individual.PractitionerRepository;
+import org.aum.fhir3.model.base.individual.Practitioner;
 import org.aum.system.Logger;
 import org.aum.fhir3.outcome.OperationOutcome;
+
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping(value = "/practitioner")
@@ -51,6 +59,52 @@ public class PractitionerController {
         }
         //TODO
         return new ResponseEntity<>(OperationOutcome.RecordNotFound(), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value="/sample/{parameter}", method = RequestMethod.GET,  produces = "application/json")
+    public ResponseEntity<?> sample(@PathVariable String parameter){
+        Practitioner practitioner = new Practitioner();
+        practitioner.setFirstName("John");
+        practitioner.setLastName("Doe");
+        practitioner.setNic("999999999");
+        practitioner.setActive(true);
+        ContactPoint contactPoint = new ContactPoint();
+        contactPoint.setSystem("phone");
+        contactPoint.setValue("0094779867098");
+        contactPoint.setUse("home");
+        contactPoint.setRank("1");
+        Period period = new Period();
+        period.setStart(new Date());
+        period.setEnd(new Date());
+        contactPoint.setPeriod(period);
+        List<ContactPoint> ls = new ArrayList<ContactPoint>();
+        ls.add(contactPoint);
+        practitioner.setTelecom(ls);
+        practitioner.setGender("male");
+        Address address = new Address();
+        address.setUse("work");
+        address.setType("postal");
+        address.setText("Villa Residence");
+        address.setLine("No 6 32nd Lane");
+        address.setCity("Colombo");
+        address.setDistrict("Colombo");
+        address.setProvince("Western");
+        address.setPostalCode("00600");
+        address.setCountry("Sri Lanka");
+        address.setPeriod(period);
+        List<Address> addressList = new ArrayList<Address>();
+        addressList.add(address);
+        practitioner.setAddress(addressList);
+        Attachment photo = new Attachment();
+        photo.setUrl("http://github.com");
+        photo.setTitle("My Photo");
+        photo.setContentType("image");
+        photo.setCreated(new Date());
+        photo.setData("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa");
+        practitioner.setPhoto(photo);
+
+        return new ResponseEntity<>(practitioner, HttpStatus.OK);
     }
     
 }

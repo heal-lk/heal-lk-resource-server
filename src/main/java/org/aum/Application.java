@@ -10,9 +10,8 @@ import org.springframework.boot.CommandLineRunner;
 
 import java.util.Calendar;
 
-import org.aum.fhir3.repository.general.ContactPointRepository;
-import org.aum.fhir3.repository.individual.PersonRepository;
-import org.aum.fhir3.model.general.Coding;
+import org.aum.fhir3.repository.base.general.ContactPointRepository;
+import org.aum.fhir3.repository.base.individual.PersonRepository;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner{

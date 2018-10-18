@@ -1,6 +1,10 @@
 package org.aum.fhir3.controller;
 
 
+import org.aum.fhir3.model.base.entities.OrganizationContact;
+import org.aum.fhir3.model.base.general.Address;
+import org.aum.fhir3.model.base.general.ContactPoint;
+import org.aum.fhir3.model.base.general.Period;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-import org.aum.fhir3.repository.entities.OrganizationRepository;
-import org.aum.fhir3.model.entities.Organization;
+import org.aum.fhir3.repository.base.entities.OrganizationRepository;
+import org.aum.fhir3.model.base.entities.Organization;
 import org.aum.system.Logger;
 import org.aum.fhir3.outcome.OperationOutcome;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping(value = "/organization")
@@ -52,6 +58,42 @@ public class OrganizationController {
         }
         //TODO
         return new ResponseEntity<>(OperationOutcome.RecordNotFound(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/sample/{parameter}", method = RequestMethod.GET,  produces = "application/json")
+    public ResponseEntity<?> sample(@PathVariable String parameter) {
+        Organization organization = new Organization();
+        organization.setActive(true);
+        organization.setName("Delmon Hospital");
+        organization.setAlias("DELMO");
+        ContactPoint contactPoint = new ContactPoint();
+        contactPoint.setSystem("phone");
+        contactPoint.setValue("0094779867098");
+        contactPoint.setUse("home");
+        contactPoint.setRank("1");
+        organization.setTelecom(contactPoint);
+        Address address = new Address();
+        address.setUse("work");
+        address.setType("postal");
+        address.setText("Villa Residence");
+        address.setLine("No 6 32nd Lane");
+        address.setCity("Colombo");
+        address.setDistrict("Colombo");
+        address.setProvince("Western");
+        address.setPostalCode("00600");
+        address.setCountry("Sri Lanka");
+        Period period = new Period();
+        period.setStart(new Date());
+        period.setEnd(new Date());
+        address.setPeriod(period);
+        organization.setAddress(address);
+        OrganizationContact organizationContact = new OrganizationContact();
+        organizationContact.setFirstName("Guru");
+        organizationContact.setLastName("Moorthy");
+        organizationContact.setTelecom(contactPoint);
+        organizationContact.setAddress(address);
+        organization.setContact(organizationContact);
+        return new ResponseEntity<>(organization, HttpStatus.OK);
     }
 
 }
