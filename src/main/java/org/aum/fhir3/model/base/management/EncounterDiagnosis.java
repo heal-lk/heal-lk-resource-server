@@ -14,7 +14,10 @@ import java.util.Date;
 import java.io.Serializable;
 import java.util.List;
 
-public class Diagnosis {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Entity
+@Table(name = "_EncounterDiagnosis")
+public class EncounterDiagnosis {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "_id")
@@ -22,7 +25,7 @@ public class Diagnosis {
 
     @OneToOne(fetch = FetchType.LAZY,
             cascade =  CascadeType.ALL)
-    @JoinColumn(unique=true, name = "_condition")
+    @JoinColumn(name = "_condition")
     private Reference condition;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

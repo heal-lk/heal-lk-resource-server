@@ -7,6 +7,7 @@ import org.aum.fhir3.model.base.entities.Organization;
 import org.aum.fhir3.model.base.general.Address;
 import org.aum.fhir3.model.base.general.Attachment;
 import org.aum.fhir3.model.base.general.ContactPoint;
+import org.aum.fhir3.model.base.general.Identifier;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -24,6 +25,14 @@ public class Patient implements Serializable{
     @Column(name = "_id")
     private Long id;
 
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL)
+    @JoinColumn(unique=true, name = "_identifier")
+    private Identifier identifier;
+
+    @Column(name = "_active")
+    private boolean active;
+
     @NotNull
     @Size(max = 100)
     @Column(name = "_firstname")
@@ -33,20 +42,6 @@ public class Patient implements Serializable{
     @Size(max = 100)
     @Column(name = "_lastName")
     private String lastName;
-
-    @NotNull
-    @Size(max = 30)
-    @Column(unique = true, name = "_nic")
-    private String nic;
-
-    //TODO phase 2
-    /*@OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_identifier")
-    private Identifier identifier;*/
-
-    @Column(name = "_active")
-    private boolean active;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "_telecom")
@@ -68,8 +63,8 @@ public class Patient implements Serializable{
     @Column(name = "_address")
     private List<Address> address;
 
-    @Column(name = "_married")
-    private boolean married;
+    @Column(name = "_maritialStatus")
+    private boolean maritialStatus;
 
     @OneToOne(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
     @JoinColumn(name = "_photo")
@@ -79,24 +74,22 @@ public class Patient implements Serializable{
     @JoinColumn(name = "_contact")
     private PatientContact contact;
 
-    //TODO PHASE 2
-    /*@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "join_patient_communication",
-            joinColumns = { @JoinColumn(name = "_patient_id") },
-            inverseJoinColumns = { @JoinColumn(name = "_communication_id") })
-    private List<PatientCommunication> communication;*/
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @Column(name = "_communication")
+    private List<PatientCommunication> communication;
 
     @OneToOne(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_link")
-    private PatientLink link;
+    @JoinColumn(name = "_generalPractitioner")
+    private Practitioner generalPractitioner;
 
     @OneToOne(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
     @JoinColumn(name = "_managingOrganization")
     private Organization managingOrganization;
 
     @OneToOne(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_generalPractitioner")
-    private Practitioner generalPractitioner;
+    @JoinColumn(name = "_link")
+    private PatientLink link;
+
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -106,9 +99,9 @@ public class Patient implements Serializable{
         this.lastName = lastName;
     }
 
-    /*public void setIdentifier(Identifier identifier) {
+    public void setIdentifier(Identifier identifier) {
         this.identifier = identifier;
-    }*/
+    }
 
     public void setActive(boolean active) {
         this.active = active;
@@ -138,8 +131,12 @@ public class Patient implements Serializable{
         this.address = address;
     }
 
-    public void setMarried(boolean married) {
-        this.married = married;
+    public boolean isMaritialStatus() {
+        return maritialStatus;
+    }
+
+    public void setMaritialStatus(boolean maritialStatus) {
+        this.maritialStatus = maritialStatus;
     }
 
     public void setPhoto(Attachment photo) {
@@ -150,9 +147,9 @@ public class Patient implements Serializable{
         this.contact = contact;
     }
 
-    /*public void setCommunication(List<PatientCommunication> communication) {
+    public void setCommunication(List<PatientCommunication> communication) {
         this.communication = communication;
-    }*/
+    }
 
     public void setLink(PatientLink link) {
         this.link = link;
@@ -178,16 +175,8 @@ public class Patient implements Serializable{
         return lastName;
     }
 
-    /*public Identifier getIdentifier() {
+    public Identifier getIdentifier() {
         return identifier;
-    }*/
-
-    public void setNic(String nic) {
-        this.nic = nic;
-    }
-
-    public String getNic() {
-        return nic;
     }
 
     public boolean isActive() {
@@ -218,9 +207,6 @@ public class Patient implements Serializable{
         return address;
     }
 
-    public boolean isMarried() {
-        return married;
-    }
 
     public Attachment getPhoto() {
         return photo;
@@ -230,9 +216,9 @@ public class Patient implements Serializable{
         return contact;
     }
 
-    /*public List<PatientCommunication> getCommunication() {
+    public List<PatientCommunication> getCommunication() {
         return communication;
-    }*/
+    }
 
     public PatientLink getLink() {
         return link;

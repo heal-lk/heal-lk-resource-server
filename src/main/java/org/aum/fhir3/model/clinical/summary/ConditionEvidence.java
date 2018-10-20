@@ -1,4 +1,4 @@
-package org.aum.fhir3.model.clinical;
+package org.aum.fhir3.model.clinical.summary;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.aum.fhir3.model.base.general.CodeableConcept;

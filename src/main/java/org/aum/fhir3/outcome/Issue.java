@@ -2,61 +2,66 @@ package org.aum.fhir3.outcome;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Issue implements Serializable {
-    private String _severerity;
-    private String _code;
-    private String _details;
-    private String _diagnostics;
-    private String _location;
-    private String _expression;
 
-    public String get_severerity() {
-        return _severerity;
+    private String severerity;
+    private String code;
+    private String details;
+    private String diagnostics;
+    private String location;
+    private String expression;
+
+    public void setSevererity(String severerity) {
+        this.severerity = severerity;
     }
 
-    public String get_code() {
-        return _code;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String get_details() {
-        return _details;
+    public void setDetails(String details) {
+        this.details = details;
     }
 
-    public String get_diagnostics() {
-        return _diagnostics;
+    public void setDiagnostics(String diagnostics) {
+        this.diagnostics = diagnostics;
     }
 
-    public String get_location() {
-        return _location;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public String get_expression() {
-        return _expression;
+    public void setExpression(String expression) {
+        this.expression = expression;
     }
 
-    public void set_severerity(String _severerity) {
-        this._severerity = _severerity;
+    public String getSevererity() {
+        return severerity;
     }
 
-    public void set_code(String _code) {
-        this._code = _code;
+    public String getCode() {
+        return code;
     }
 
-    public void set_details(String _details) {
-        this._details = _details;
+    public String getDetails() {
+        return details;
     }
 
-    public void set_diagnostics(String _diagnostics) {
-        this._diagnostics = _diagnostics;
+    public String getDiagnostics() {
+        return diagnostics;
     }
 
-    public void set_location(String _location) {
-        this._location = _location;
+    public String getLocation() {
+        return location;
     }
 
-    public void set_expression(String _expression) {
-        this._expression = _expression;
+    public String getExpression() {
+        return expression;
     }
 }

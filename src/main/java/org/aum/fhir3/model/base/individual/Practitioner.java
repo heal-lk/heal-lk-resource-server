@@ -4,9 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.aum.fhir3.model.base.general.Address;
-import org.aum.fhir3.model.base.general.Attachment;
-import org.aum.fhir3.model.base.general.ContactPoint;
+import org.aum.fhir3.model.base.general.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -20,6 +18,11 @@ public class Practitioner implements Serializable {
     @Column(name = "_id")
     private Long id;
 
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL)
+    @JoinColumn(unique=true, name = "_identifier")
+    private Identifier identifier;
+
     private boolean active;
 
     @NotNull
@@ -31,11 +34,6 @@ public class Practitioner implements Serializable {
     @Size(max = 100)
     @Column(name = "_lastname")
     private String lastName;
-
-    @NotNull
-    @Size(max = 100)
-    @Column(name = "_nic")
-    private String nic;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "_telecom")
@@ -61,10 +59,9 @@ public class Practitioner implements Serializable {
     @JoinColumn(name = "_qualification")
     private PractitionerQualification qualification;
 
-    //TODO PHASE 2
-    /*@OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL)
-    private CodeableConcept _communication;*/
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @Column(name = "_communication")
+    private List<CodeableConcept> communication;
 
     public void setActive(boolean active) {
         this.active = active;
@@ -76,10 +73,6 @@ public class Practitioner implements Serializable {
 
     public void setLastName(String lastname) {
         this.lastName = lastname;
-    }
-
-    public void setNic(String nic) {
-        this.nic = nic;
     }
 
     public void setTelecom(List<ContactPoint> telecom) {
@@ -120,10 +113,6 @@ public class Practitioner implements Serializable {
 
     public String getLastname() {
         return lastName;
-    }
-
-    public String getNic() {
-        return nic;
     }
 
     public List<ContactPoint> getTelecom() {

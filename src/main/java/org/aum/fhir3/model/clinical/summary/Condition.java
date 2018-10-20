@@ -1,4 +1,4 @@
-package org.aum.fhir3.model.clinical;
+package org.aum.fhir3.model.clinical.summary;
 
 
 import javax.persistence.*;
@@ -8,8 +8,6 @@ import org.aum.fhir3.model.base.general.CodeableConcept;
 import org.aum.fhir3.model.base.general.Identifier;
 import org.aum.fhir3.model.base.general.Onset;
 import org.aum.fhir3.model.base.individual.Annotation;
-import org.aum.fhir3.model.base.individual.Patient;
-import org.aum.fhir3.model.base.individual.Practitioner;
 import org.aum.fhir3.model.foundation.Reference;
 
 import java.io.Serializable;

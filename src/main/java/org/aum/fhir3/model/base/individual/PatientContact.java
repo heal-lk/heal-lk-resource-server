@@ -6,9 +6,11 @@ import org.aum.fhir3.model.base.general.Address;
 import org.aum.fhir3.model.base.general.ContactPoint;
 import org.aum.fhir3.model.base.general.Period;
 import org.aum.fhir3.model.base.entities.Organization;
+import org.aum.fhir3.model.foundation.Reference;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "PatientContact")
@@ -24,15 +26,13 @@ public class PatientContact implements Serializable {
     @Column(name = "_lastname")
     private String lastname;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_telecom")
-    private ContactPoint telecom;
+    @OneToMany(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
+    @Column(name = "_telecom")
+    private List<ContactPoint> telecom;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_address")
-    private Address address;
+    @OneToMany(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
+    @Column(name = "_address")
+    private List<Address> address;
 
     @Column(name = "_gender")
     private String gender;
@@ -40,70 +40,10 @@ public class PatientContact implements Serializable {
     @OneToOne(fetch = FetchType.LAZY,
             cascade =  CascadeType.ALL)
     @JoinColumn(name = "_organization")
-    private Organization organization;
+    private Reference organization;
 
     @OneToOne(fetch = FetchType.LAZY,
             cascade =  CascadeType.ALL)
     @JoinColumn(name = "_period")
     private Period period;
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public void setTelecom(ContactPoint telecom) {
-        this.telecom = telecom;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
-    }
-
-    public void setPeriod(Period period) {
-        this.period = period;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public ContactPoint getTelecom() {
-        return telecom;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public Period getPeriod() {
-        return period;
-    }
 }

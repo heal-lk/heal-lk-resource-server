@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.*;
 import org.aum.fhir3.model.base.entities.HealthcareService;
 import org.aum.fhir3.model.base.entities.Organization;
 import org.aum.fhir3.model.base.general.*;
+import org.aum.fhir3.model.foundation.Reference;
 
 import java.util.List;
 
@@ -18,7 +19,6 @@ public class PractitionerRole {
     @Column(name = "_id")
     private Long id;
 
-    //TODO phase 2
     @OneToOne(fetch = FetchType.LAZY,
             cascade =  CascadeType.ALL)
     @JoinColumn(name = "_identifier")
@@ -33,31 +33,32 @@ public class PractitionerRole {
     private Period period;
 
     @OneToOne(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_practitionerRole")
-    private Practitioner practitionerRole;
+    @JoinColumn(name = "_pracitioner")
+    private Reference pracitioner;
 
     @OneToOne(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
     @JoinColumn(name = "_organization")
-    private Organization organization;
+    private Reference organization;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "_code")
     private List<CodeableConcept> code;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_speciality")
-    private CodeableConcept speciality;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "_speciality")
+    private List<CodeableConcept> speciality;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "_location")
-    private List<Location> location;
+    private List<Reference> location;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "_healthcareService")
-    private List<HealthcareService> healthcareService;
+    private List<Reference> healthcareService;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "_telecom")
-    private ContactPoint telecom;
+    private List<ContactPoint> telecom;
 
     @OneToOne(fetch = FetchType.LAZY,
             cascade =  CascadeType.ALL)
@@ -66,4 +67,8 @@ public class PractitionerRole {
 
     @Column(name = "_availabilityExceptions")
     private String availabilityExceptions;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "_endpoints")
+    private List<Reference> endpoints;
 }

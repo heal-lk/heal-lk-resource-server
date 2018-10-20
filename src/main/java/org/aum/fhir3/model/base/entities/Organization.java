@@ -5,23 +5,30 @@ import javax.persistence.*;
 import org.aum.fhir3.model.base.general.Address;
 import org.aum.fhir3.model.base.general.CodeableConcept;
 import org.aum.fhir3.model.base.general.ContactPoint;
+import org.aum.fhir3.model.base.general.Identifier;
+import org.aum.fhir3.model.foundation.Reference;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class Organization implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "_id")
-    private Long id;    //TODO this id generation is insecure
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL)
+    @JoinColumn(unique=true, name = "_identifier")
+    private Identifier identifier;
 
     @Column(name = "_active")
     private boolean active;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_type")
-    private CodeableConcept type;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "_type")
+    private List<CodeableConcept> type;
 
     @Column(name = "_name", unique = true, length = 30)
     private String name;
@@ -29,31 +36,48 @@ public class Organization implements Serializable {
     @Column(name = "_alias")
     private String alias;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_telecom")
-    private ContactPoint telecom;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "_telecom")
+    private List<ContactPoint> telecom;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_address")
-    private Address address;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "_address")
+    private List<Address> address;
 
     @OneToOne(fetch = FetchType.LAZY,
             cascade =  CascadeType.ALL)
     @JoinColumn(name = "_partof")
-    private Organization partof;
+    private Reference partof;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL)
-    @JoinColumn(name = "_contact")
-    private OrganizationContact contact;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "_contact")
+    private List<OrganizationContact> contact;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "_endpoint")
+    public List<Reference> endpoint;
+
+    public Identifier getIdentifier() {
+        return identifier;
+    }
+
+    public List<Reference> getEndpoint() {
+        return endpoint;
+    }
+
+    public void setIdentifier(Identifier identifier) {
+        this.identifier = identifier;
+    }
+
+    public void setEndpoint(List<Reference> endpoint) {
+        this.endpoint = endpoint;
+    }
 
     public void setActive(boolean active) {
         this.active = active;
     }
 
-    public void setType(CodeableConcept type) {
+    public void setType(List<CodeableConcept> type) {
         this.type = type;
     }
 
@@ -65,19 +89,19 @@ public class Organization implements Serializable {
         this.alias = alias;
     }
 
-    public void setTelecom(ContactPoint telecom) {
+    public void setTelecom(List<ContactPoint> telecom) {
         this.telecom = telecom;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(List<Address> address) {
         this.address = address;
     }
 
-    public void setPartof(Organization partof) {
+    public void setPartof(Reference partof) {
         this.partof = partof;
     }
 
-    public void setContact(OrganizationContact contact) {
+    public void setContact(List<OrganizationContact> contact) {
         this.contact = contact;
     }
 
@@ -89,7 +113,7 @@ public class Organization implements Serializable {
         return active;
     }
 
-    public CodeableConcept getType() {
+    public List<CodeableConcept> getType() {
         return type;
     }
 
@@ -101,19 +125,21 @@ public class Organization implements Serializable {
         return alias;
     }
 
-    public ContactPoint getTelecom() {
+    public List<ContactPoint> getTelecom() {
         return telecom;
     }
 
-    public Address getAddress() {
+    public List<Address> getAddress() {
         return address;
     }
 
-    public Organization getPartof() {
+    public Reference getPartof() {
         return partof;
     }
 
-    public OrganizationContact getContact() {
+    public List<OrganizationContact> getContact() {
         return contact;
     }
+
+
 }

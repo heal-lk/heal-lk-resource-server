@@ -33,8 +33,8 @@ public class PractitionerController {
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Practitioner practitioner){
-        try {
-            Practitioner tmp = practitionerRepository.findOneRegisteredPractitionerByNic(practitioner.getNic());
+        /*try {
+            Practitioner tmp = practitionerRepository.findPractitionerById(practitioner.getId());
             if(tmp == null) {
                 practitioner = practitionerRepository.save(practitioner);
                 return new ResponseEntity<>(practitioner, HttpStatus.OK);
@@ -46,28 +46,36 @@ public class PractitionerController {
             //TODO
             Logger.LogError(e.getMessage());
             return new ResponseEntity<>(OperationOutcome.InternalError(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        }*/
+        return null;
     }
 
 
     @RequestMapping(value = "/read/{nic}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<?> read(@PathVariable String nic){
-        Practitioner tmp = practitionerRepository.findOneRegisteredPractitionerByNic(nic);
+    public ResponseEntity<?> read(@PathVariable String id){
+        /*List<Practitioner> tmp = practitionerRepository.findAll();
         if(tmp != null){
             return new ResponseEntity<>(tmp, HttpStatus.OK);
         }
-        //TODO
-        return new ResponseEntity<>(OperationOutcome.RecordNotFound(), HttpStatus.OK);
+        return new ResponseEntity<>(OperationOutcome.RecordNotFound(), HttpStatus.OK);*/
+        return null;
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?>  list(){
+        /*return new ResponseEntity<List>(practitionerRepository.findAll(), HttpStatus.OK);*/
+        return null;
     }
 
 
     @RequestMapping(value="/sample/{parameter}", method = RequestMethod.GET,  produces = "application/json")
     public ResponseEntity<?> sample(@PathVariable String parameter){
-        Practitioner practitioner = new Practitioner();
+        /*Practitioner practitioner = new Practitioner();
         practitioner.setFirstName("John");
         practitioner.setLastName("Doe");
-        practitioner.setNic("999999999");
+        //practitioner.setNic("999999999");
         practitioner.setActive(true);
         ContactPoint contactPoint = new ContactPoint();
         contactPoint.setSystem("phone");
@@ -104,7 +112,8 @@ public class PractitionerController {
         photo.setData("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa");
         practitioner.setPhoto(photo);
 
-        return new ResponseEntity<>(practitioner, HttpStatus.OK);
+        return new ResponseEntity<>(practitioner, HttpStatus.OK);*/
+        return null;
     }
     
 }

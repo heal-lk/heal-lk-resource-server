@@ -36,30 +36,33 @@ public class PatientController {
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Patient patient){
-        try {
-            Patient tmp = patientRepository.findOneRegisteredPatientByNic(patient.getNic());
+        /*try {
+            Patient tmp = patientRepository.findPatientById(patient.getId());
             if(tmp == null) {
                 patient = patientRepository.save(patient);
-                return new ResponseEntity<>(patient, HttpStatus.OK);
+                return new ResponseEntity<Patient>(patient, HttpStatus.OK);
             }else{
-                //TODO
-                return new ResponseEntity<>(OperationOutcome.RecordExists(), HttpStatus.INTERNAL_SERVER_ERROR);
+                Logger.LogError("Record already exists");
+                return new ResponseEntity<OperationOutcome>(OperationOutcome.RecordExists(), HttpStatus.OK);
             }
         } catch(Exception e){
             //TODO
             Logger.LogError(e.getMessage());
-            return new ResponseEntity<>(OperationOutcome.InternalError(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            return new ResponseEntity<OperationOutcome>(OperationOutcome.InternalError(), HttpStatus.OK);
+        }*/
+        return null;
     }
 
-    @RequestMapping(value = "/read/{nic}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/read/{code}/{value}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> read(String nic){
-        Patient tmp = patientRepository.findOneRegisteredPatientByNic(nic);
-        if(tmp != null){
-            return new ResponseEntity<>(tmp, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(OperationOutcome.RecordNotFound(), HttpStatus.OK);
+        return null;
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?>  list(){
+        return new ResponseEntity<List>(patientRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -74,10 +77,9 @@ public class PatientController {
 
     @RequestMapping(value="/sample/{parameter}", method = RequestMethod.GET,  produces = "application/json")
     public ResponseEntity<?> sample(@PathVariable String parameter){
-        Patient patient = new Patient();
+        /*Patient patient = new Patient();
         patient.setFirstName("John");
         patient.setLastName("Doe");
-        patient.setNic("999999999");
         patient.setActive(true);
         ContactPoint contactPoint = new ContactPoint();
         contactPoint.setSystem("phone");
@@ -108,7 +110,7 @@ public class PatientController {
         List<Address> addressList = new ArrayList<Address>();
         addressList.add(address);
         patient.setAddress(addressList);
-        patient.setMarried(false);
+        patient.setMaritialStatus(false);
         Attachment photo = new Attachment();
         photo.setUrl("http://github.com");
         photo.setTitle("My Photo");
@@ -126,7 +128,8 @@ public class PatientController {
         patientContact.setOrganization(null);
         patient.setContact(patientContact);
 
-        return new ResponseEntity<>(patient, HttpStatus.OK);
+        return new ResponseEntity<>(patient, HttpStatus.OK);*/
+        return null;
     }
     
 }

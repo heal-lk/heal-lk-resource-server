@@ -1,14 +1,16 @@
 package org.aum.fhir3.model.base.general;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.*;
+import org.aum.fhir3.model.foundation.Reference;
 
 import java.io.Serializable;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name = "Identifier")
+@Table(name = "Identifier" , uniqueConstraints= @UniqueConstraint(columnNames={"_type", "_value"}))
 public class Identifier {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -26,6 +28,7 @@ public class Identifier {
     @Column(name = "_system")
     private String system;
 
+    @Size(max = 50)
     @Column(name = "_value")
     private String value;
 
@@ -34,9 +37,18 @@ public class Identifier {
     @JoinColumn(name = "_period")
     private Period period;
 
-    //TODO
-    //private Reference _assigner
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL)
+    @JoinColumn(name = "_assigner")
+    private Reference assigner;
 
+    public Reference getAssigner() {
+        return assigner;
+    }
+
+    public void setAssigner(Reference assigner) {
+        this.assigner = assigner;
+    }
 
     public void setUse(String use) {
         this.use = use;

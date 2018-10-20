@@ -8,6 +8,7 @@ import org.aum.fhir3.model.base.general.ContactPoint;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "_OrganizationContact")
 public class OrganizationContact implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
