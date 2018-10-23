@@ -40,4 +40,6 @@ public class CodeableConcept implements Serializable {
     public String getText() {
         return text;
     }
+
+
 }

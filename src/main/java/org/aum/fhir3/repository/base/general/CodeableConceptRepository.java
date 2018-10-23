@@ -9,5 +9,5 @@ import org.aum.fhir3.model.base.general.CodeableConcept;
 
 @Repository
 public interface CodeableConceptRepository extends JpaRepository<CodeableConcept, Long> {
-
+    public CodeableConcept findOneCodeableConceptByText(String text);
 }

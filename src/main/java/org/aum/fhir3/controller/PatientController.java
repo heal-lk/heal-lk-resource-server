@@ -1,10 +1,8 @@
 package org.aum.fhir3.controller;
 
-import org.aum.fhir3.model.base.general.Address;
-import org.aum.fhir3.model.base.general.Attachment;
-import org.aum.fhir3.model.base.general.ContactPoint;
-import org.aum.fhir3.model.base.general.Period;
+import org.aum.fhir3.model.base.general.*;
 import org.aum.fhir3.model.base.individual.PatientContact;
+import org.aum.fhir3.repository.base.general.IdentifierRepository;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +22,7 @@ import org.aum.fhir3.outcome.OperationOutcome;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.lang.Long;
 
 @RestController
 @RequestMapping(value = "/patient")
@@ -33,36 +32,72 @@ public class PatientController {
     @Autowired
     private TestRepository testRepository;
 
+    @Autowired
+    private IdentifierRepository identifierRepository;
+
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Patient patient){
-        /*try {
-            Patient tmp = patientRepository.findPatientById(patient.getId());
-            if(tmp == null) {
-                patient = patientRepository.save(patient);
-                return new ResponseEntity<Patient>(patient, HttpStatus.OK);
-            }else{
-                Logger.LogError("Record already exists");
-                return new ResponseEntity<OperationOutcome>(OperationOutcome.RecordExists(), HttpStatus.OK);
-            }
-        } catch(Exception e){
-            //TODO
-            Logger.LogError(e.getMessage());
+        Identifier identifier = patient.getIdentifier();
+
+        if( (identifier.getType() == null) || (identifier.getValue() == null) ){
+            return new ResponseEntity<OperationOutcome>(OperationOutcome.InvalidParameter(),
+                                                                                HttpStatus.OK);
+        }
+        identifier = identifierRepository.findIdentifierByValue(identifier.getValue());
+        if(identifier != null){
+            return new ResponseEntity<OperationOutcome>(OperationOutcome.RecordExists(),
+                    HttpStatus.OK);
+        }
+
+        try{
+            Patient tmpPatient = new Patient();
+            tmpPatient = patientRepository.save(tmpPatient);
+            patient.setId(tmpPatient.getId());
+            patient = patientRepository.save(patient);
+            return new ResponseEntity<Patient>(patient, HttpStatus.OK);
+        }catch(Exception e){
+            Logger.LogError("Record already exists");
             return new ResponseEntity<OperationOutcome>(OperationOutcome.InternalError(), HttpStatus.OK);
-        }*/
-        return null;
+        }
     }
 
-    @RequestMapping(value = "/read/{code}/{value}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/readByValue/{value}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> read(String nic){
-        return null;
+    public ResponseEntity<?> readByValue(String value){
+        Identifier identifier;
+        identifier = identifierRepository.findIdentifierByValue(value);
+        if(identifier == null){
+            return new ResponseEntity<OperationOutcome>(OperationOutcome.RecordNotFound(),
+                    HttpStatus.OK);
+        }
+
+        Patient patient = patientRepository.findPatientByIdentifier(identifier);
+
+        if(patient == null){
+            return new ResponseEntity<OperationOutcome>(OperationOutcome.RecordNotFound(),
+                    HttpStatus.OK);
+        }else{
+            return new ResponseEntity<Patient>(patient, HttpStatus.OK);
+        }
+
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/read/{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?>  list(){
-        return new ResponseEntity<List>(patientRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<?> read(String id){
+        try {
+            Patient patient = patientRepository.findPatientById(Long.parseLong(id));
+            if(patient == null){
+                return new ResponseEntity<OperationOutcome>(OperationOutcome.RecordNotFound(),
+                        HttpStatus.OK);
+            }else {
+                return new ResponseEntity<Patient>(patient, HttpStatus.OK);
+            }
+        }catch(Exception e){
+            Logger.LogError("log parse error");
+            return new ResponseEntity<OperationOutcome>(OperationOutcome.InternalError(), HttpStatus.OK);
+        }
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -75,8 +110,21 @@ public class PatientController {
         return "deleting a patient object";
     }
 
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?>  list(){
+        return new ResponseEntity<List>(patientRepository.findAll(), HttpStatus.OK);
+    }
+
     @RequestMapping(value="/sample/{parameter}", method = RequestMethod.GET,  produces = "application/json")
     public ResponseEntity<?> sample(@PathVariable String parameter){
+        Patient patient = new Patient();
+        patient.setMaritialStatus(false);
+        HumanName name = new HumanName();
+        name.setFamily("Doe");
+        name.setGiven("John");
+        patient.setName(name);
+        return new ResponseEntity<>(patient, HttpStatus.OK);
         /*Patient patient = new Patient();
         patient.setFirstName("John");
         patient.setLastName("Doe");
@@ -129,7 +177,6 @@ public class PatientController {
         patient.setContact(patientContact);
 
         return new ResponseEntity<>(patient, HttpStatus.OK);*/
-        return null;
     }
     
 }

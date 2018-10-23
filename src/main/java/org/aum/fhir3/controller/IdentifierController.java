@@ -1,10 +1,8 @@
 package org.aum.fhir3.controller;
 
-import org.aum.fhir3.model.base.general.Address;
-import org.aum.fhir3.model.base.general.Attachment;
-import org.aum.fhir3.model.base.general.ContactPoint;
-import org.aum.fhir3.model.base.general.Period;
+import org.aum.fhir3.model.base.general.*;
 import org.aum.fhir3.model.base.individual.PatientContact;
+import org.aum.fhir3.repository.base.general.CodeableConceptRepository;
 import org.aum.fhir3.repository.base.general.IdentifierRepository;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,11 +53,16 @@ public class IdentifierController {
     @Autowired
     private IdentifierRepository identifierRepository;
 
-    @RequestMapping(value = "/find/{coding}/{value}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<?>  find(@PathVariable String coding, @PathVariable String value){
-        //return new ResponseEntity<List>(patientRepository.findAll(), HttpStatus.OK);
-        return new ResponseEntity<>(new TestReturn(coding,value), HttpStatus.OK);
+    @Autowired
+    private CodeableConceptRepository codeableConceptRepository;
+
+    @RequestMapping(value="/sample/{parameter}", method = RequestMethod.GET,  produces = "application/json")
+    public ResponseEntity<?> sample(@PathVariable String parameter){
+        Identifier tmp = new Identifier();
+        tmp.setUse("official");
+        tmp.setType(codeableConceptRepository.findOneCodeableConceptByText("identifier-type"));
+        tmp.setValue("999999999");
+        return new ResponseEntity<>(tmp, HttpStatus.OK);
     }
 
 }

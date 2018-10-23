@@ -4,10 +4,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.*;
 import org.aum.fhir3.model.base.entities.Organization;
-import org.aum.fhir3.model.base.general.Address;
-import org.aum.fhir3.model.base.general.Attachment;
-import org.aum.fhir3.model.base.general.ContactPoint;
-import org.aum.fhir3.model.base.general.Identifier;
+import org.aum.fhir3.model.base.general.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -33,15 +30,10 @@ public class Patient implements Serializable{
     @Column(name = "_active")
     private boolean active;
 
-    @NotNull
-    @Size(max = 100)
-    @Column(name = "_firstname")
-    private String firstName;
-
-    @NotNull
-    @Size(max = 100)
-    @Column(name = "_lastName")
-    private String lastName;
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL)
+    @JoinColumn(name = "_name")
+    private HumanName name;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "_telecom")
@@ -90,89 +82,8 @@ public class Patient implements Serializable{
     @JoinColumn(name = "_link")
     private PatientLink link;
 
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setIdentifier(Identifier identifier) {
-        this.identifier = identifier;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public void setTelecom(List<ContactPoint> telecom) {
-        this.telecom = telecom;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public void setDeceased(boolean deceased) {
-        this.deceased = deceased;
-    }
-
-    public void setDeceasedDateTime(Date deceasedDateTime) {
-        this.deceasedDateTime = deceasedDateTime;
-    }
-
-    public void setAddress(List<Address> address) {
-        this.address = address;
-    }
-
-    public boolean isMaritialStatus() {
-        return maritialStatus;
-    }
-
-    public void setMaritialStatus(boolean maritialStatus) {
-        this.maritialStatus = maritialStatus;
-    }
-
-    public void setPhoto(Attachment photo) {
-        this.photo = photo;
-    }
-
-    public void setContact(PatientContact contact) {
-        this.contact = contact;
-    }
-
-    public void setCommunication(List<PatientCommunication> communication) {
-        this.communication = communication;
-    }
-
-    public void setLink(PatientLink link) {
-        this.link = link;
-    }
-
-    public void setManagingOrganization(Organization managingOrganization) {
-        this.managingOrganization = managingOrganization;
-    }
-
-    public void setGeneralPractitioner(Practitioner generalPractitioner) {
-        this.generalPractitioner = generalPractitioner;
-    }
-
     public Long getId() {
         return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
     }
 
     public Identifier getIdentifier() {
@@ -181,6 +92,10 @@ public class Patient implements Serializable{
 
     public boolean isActive() {
         return active;
+    }
+
+    public HumanName getName() {
+        return name;
     }
 
     public List<ContactPoint> getTelecom() {
@@ -207,6 +122,9 @@ public class Patient implements Serializable{
         return address;
     }
 
+    public boolean isMaritialStatus() {
+        return maritialStatus;
+    }
 
     public Attachment getPhoto() {
         return photo;
@@ -220,16 +138,84 @@ public class Patient implements Serializable{
         return communication;
     }
 
-    public PatientLink getLink() {
-        return link;
+    public Practitioner getGeneralPractitioner() {
+        return generalPractitioner;
     }
 
     public Organization getManagingOrganization() {
         return managingOrganization;
     }
 
-    public Practitioner getGeneralPractitioner() {
-        return generalPractitioner;
+    public PatientLink getLink() {
+        return link;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setIdentifier(Identifier identifier) {
+        this.identifier = identifier;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setName(HumanName name) {
+        this.name = name;
+    }
+
+    public void setTelecom(List<ContactPoint> telecom) {
+        this.telecom = telecom;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setDeceased(boolean deceased) {
+        this.deceased = deceased;
+    }
+
+    public void setDeceasedDateTime(Date deceasedDateTime) {
+        this.deceasedDateTime = deceasedDateTime;
+    }
+
+    public void setAddress(List<Address> address) {
+        this.address = address;
+    }
+
+    public void setMaritialStatus(boolean maritialStatus) {
+        this.maritialStatus = maritialStatus;
+    }
+
+    public void setPhoto(Attachment photo) {
+        this.photo = photo;
+    }
+
+    public void setContact(PatientContact contact) {
+        this.contact = contact;
+    }
+
+    public void setCommunication(List<PatientCommunication> communication) {
+        this.communication = communication;
+    }
+
+    public void setGeneralPractitioner(Practitioner generalPractitioner) {
+        this.generalPractitioner = generalPractitioner;
+    }
+
+    public void setManagingOrganization(Organization managingOrganization) {
+        this.managingOrganization = managingOrganization;
+    }
+
+    public void setLink(PatientLink link) {
+        this.link = link;
     }
 }
 
